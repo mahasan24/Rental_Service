@@ -28,4 +28,25 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
+router.post('/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password required' });
+    }
+    const result = await pool.query(
+      'SELECT id, email, name, password_hash FROM users WHERE email = $1',
+      [email.trim().toLowerCase()]
+    );
+    const user = result.rows[0];
+    if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ user: { id: user.id, email: user.email, name: user.name }, token });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
