@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import VanList from './pages/VanList';
+import VanDetail from './pages/VanDetail';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/vans" element={<VanList />} />
+        <Route path="/vans/:id" element={<VanDetail />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
