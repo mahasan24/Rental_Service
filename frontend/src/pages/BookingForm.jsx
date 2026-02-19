@@ -71,12 +71,12 @@ export default function BookingForm() {
 
     setSubmitting(true);
     try {
-      await client.post('/bookings', {
+      const res = await client.post('/bookings', {
         van_id: parseInt(vanId, 10),
         start_date: startDate,
         end_date: endDate,
       });
-      navigate('/bookings', { state: { success: true } });
+      navigate('/booking-confirmation', { state: { booking: res.data, van } });
     } catch (err) {
       const msg = err.response?.data?.error || 'Booking failed. Please try again.';
       setError(msg);
