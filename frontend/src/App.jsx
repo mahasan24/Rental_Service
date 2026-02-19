@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import VanList from './pages/VanList';
 import VanDetail from './pages/VanDetail';
+import BookingForm from './pages/BookingForm';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/vans" element={<VanList />} />
         <Route path="/vans/:id" element={<VanDetail />} />
+        <Route path="/book/:vanId" element={<BookingForm />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
