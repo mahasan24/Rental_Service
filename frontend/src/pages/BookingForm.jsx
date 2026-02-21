@@ -14,9 +14,12 @@ export default function BookingForm() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({ startDate: '', endDate: '' });
   const [available, setAvailable] = useState(null);
+  const [availabilityError, setAvailabilityError] = useState(false);
 
   const today = new Date().toISOString().split('T')[0];
+  const MAX_BOOKING_DAYS = 90;
 
   useEffect(() => {
     async function fetchVan() {
@@ -35,37 +38,81 @@ export default function BookingForm() {
   useEffect(() => {
     if (!startDate || !endDate || !van) {
       setAvailable(null);
+      setAvailabilityError(false);
       return;
     }
+    setError('');
+    setFieldErrors({ startDate: '', endDate: '' });
     let cancelled = false;
     async function check() {
       try {
         const res = await client.get('/bookings/availability', {
           params: { van_id: van.id, start_date: startDate, end_date: endDate },
         });
-        if (!cancelled) setAvailable(res.data.available);
+        if (!cancelled) {
+          setAvailable(res.data.available);
+          setAvailabilityError(false);
+        }
       } catch {
-        if (!cancelled) setAvailable(null);
+        if (!cancelled) {
+          setAvailable(null);
+          setAvailabilityError(true);
+        }
       }
     }
     check();
     return () => { cancelled = true; };
   }, [startDate, endDate, van]);
 
+  function validateDates() {
+    const errors = { startDate: '', endDate: '' };
+    const todayStr = today;
+    if (!startDate) {
+      errors.startDate = 'Please select a start date.';
+      return errors;
+    }
+    if (startDate < todayStr) {
+      errors.startDate = 'Start date cannot be in the past.';
+      return errors;
+    }
+    if (!endDate) {
+      errors.endDate = 'Please select an end date.';
+      return errors;
+    }
+    if (endDate < startDate) {
+      errors.endDate = 'End date must be on or after start date.';
+      return errors;
+    }
+    const days = getDayCount();
+    if (days > MAX_BOOKING_DAYS) {
+      errors.endDate = `Booking cannot exceed ${MAX_BOOKING_DAYS} days.`;
+    }
+    return errors;
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+    setFieldErrors({ startDate: '', endDate: '' });
 
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
-    if (!startDate || !endDate) {
-      setError('Please select both start and end dates.');
+    const errors = validateDates();
+    const hasFieldErrors = errors.startDate || errors.endDate;
+    if (hasFieldErrors) {
+      setFieldErrors(errors);
+      if (errors.startDate) setError(errors.startDate);
+      else if (errors.endDate) setError(errors.endDate);
       return;
     }
-    if (new Date(endDate) < new Date(startDate)) {
-      setError('End date must be on or after start date.');
+    if (available === false) {
+      setError('This van is not available for the selected dates. Please choose different dates.');
+      return;
+    }
+    if (availabilityError) {
+      setError('Could not verify availability. Please check your connection and try again.');
       return;
     }
 
@@ -78,7 +125,7 @@ export default function BookingForm() {
       });
       navigate('/booking-confirmation', { state: { booking: res.data, van } });
     } catch (err) {
-      const msg = err.response?.data?.error || 'Booking failed. Please try again.';
+      const msg = err.response?.data?.error || err.message || 'Booking failed. Please try again.';
       setError(msg);
     } finally {
       setSubmitting(false);
@@ -176,17 +223,36 @@ export default function BookingForm() {
           <div style={s.fieldRow}>
             <div style={s.fieldGroup}>
               <label style={s.label}>Start Date</label>
-              <input type="date" style={s.input} min={today} value={startDate}
-                onChange={e => { setStartDate(e.target.value); if (endDate && e.target.value > endDate) setEndDate(''); }} />
+              <input
+                type="date"
+                style={{ ...s.input, ...(fieldErrors.startDate ? { borderColor: '#b91c1c' } : {}) }}
+                min={today}
+                value={startDate}
+                onChange={e => { setStartDate(e.target.value); if (endDate && e.target.value > endDate) setEndDate(''); }}
+                aria-invalid={!!fieldErrors.startDate}
+                aria-describedby={fieldErrors.startDate ? 'start-date-error' : undefined}
+              />
+              {fieldErrors.startDate && <span id="start-date-error" style={{ fontSize: '0.8rem', color: '#b91c1c' }}>{fieldErrors.startDate}</span>}
             </div>
             <div style={s.fieldGroup}>
               <label style={s.label}>End Date</label>
-              <input type="date" style={s.input} min={startDate || today} value={endDate}
-                onChange={e => setEndDate(e.target.value)} />
+              <input
+                type="date"
+                style={{ ...s.input, ...(fieldErrors.endDate ? { borderColor: '#b91c1c' } : {}) }}
+                min={startDate || today}
+                value={endDate}
+                onChange={e => setEndDate(e.target.value)}
+                aria-invalid={!!fieldErrors.endDate}
+                aria-describedby={fieldErrors.endDate ? 'end-date-error' : undefined}
+              />
+              {fieldErrors.endDate && <span id="end-date-error" style={{ fontSize: '0.8rem', color: '#b91c1c' }}>{fieldErrors.endDate}</span>}
             </div>
           </div>
 
-          {startDate && endDate && available !== null && (
+          {availabilityError && startDate && endDate && (
+            <div style={{ ...s.errorBox, marginBottom: '0.75rem' }}>Could not check availability. Please try again.</div>
+          )}
+          {startDate && endDate && available !== null && !availabilityError && (
             <span style={{ ...s.availBadge, ...(available ? s.availYes : s.availNo) }}>
               {available ? 'Available for selected dates' : 'Not available — choose different dates'}
             </span>

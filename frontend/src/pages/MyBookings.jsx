@@ -24,20 +24,23 @@ export default function MyBookings() {
     try {
       const res = await client.get('/bookings');
       setBookings(res.data);
-    } catch {
-      setError('Failed to load your bookings.');
+    } catch (err) {
+      const msg = err.response?.data?.error || err.message || 'Failed to load your bookings.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
   }
 
   async function handleCancel(id) {
+    setError('');
     setCancellingId(id);
     try {
       await client.patch(`/bookings/${id}/cancel`);
       setBookings(prev => prev.map(b => b.id === id ? { ...b, status: 'cancelled' } : b));
-    } catch {
-      setError('Failed to cancel booking. Please try again.');
+    } catch (err) {
+      const msg = err.response?.data?.error || err.message || 'Failed to cancel booking. Please try again.';
+      setError(msg);
     } finally {
       setCancellingId(null);
     }
@@ -87,6 +90,11 @@ export default function MyBookings() {
       fontWeight: 500,
     },
     empty: { textAlign: 'center', padding: '3rem', color: '#888' },
+    retryBtn: {
+      marginTop: '0.5rem', padding: '0.5rem 1rem', background: '#2563eb',
+      color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer',
+      fontSize: '0.9rem', fontWeight: 500,
+    },
   };
 
   if (!isAuthenticated) {
@@ -101,13 +109,27 @@ export default function MyBookings() {
     );
   }
 
-  if (loading) return <div style={{ ...s.container, textAlign: 'center', padding: '3rem' }}>Loading your bookings...</div>;
-  if (error) return <div style={s.container}><h1 style={s.heading}>My Bookings</h1><div style={s.errorBox}>{error}</div></div>;
+  if (loading && bookings.length === 0) {
+    return <div style={{ ...s.container, textAlign: 'center', padding: '3rem' }}>Loading your bookings...</div>;
+  }
+
+  if (error && bookings.length === 0) {
+    return (
+      <div style={s.container}>
+        <h1 style={s.heading}>My Bookings</h1>
+        <p style={s.subtitle}>View and manage your van reservations.</p>
+        <div style={s.errorBox}>{error}</div>
+        <button type="button" style={s.retryBtn} onClick={() => fetchBookings()}>Try again</button>
+      </div>
+    );
+  }
 
   return (
     <div style={s.container}>
       <h1 style={s.heading}>My Bookings</h1>
       <p style={s.subtitle}>View and manage your van reservations.</p>
+
+      {error && <div style={s.errorBox}>{error}</div>}
 
       {bookings.length === 0 ? (
         <div style={s.empty}>
