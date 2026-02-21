@@ -7,6 +7,7 @@ import VanList from './pages/VanList';
 import VanDetail from './pages/VanDetail';
 import BookingForm from './pages/BookingForm';
 import BookingConfirmation from './pages/BookingConfirmation';
+import MyBookings from './pages/MyBookings';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/vans/:id" element={<VanDetail />} />
         <Route path="/book/:vanId" element={<BookingForm />} />
         <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+        <Route path="/bookings" element={<MyBookings />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
