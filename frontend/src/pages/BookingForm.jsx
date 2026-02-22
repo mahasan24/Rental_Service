@@ -41,6 +41,12 @@ export default function BookingForm() {
       setAvailabilityError(false);
       return;
     }
+    // Don't check availability if not logged in - will prompt to login instead
+    if (!isAuthenticated) {
+      setAvailable(null);
+      setAvailabilityError(false);
+      return;
+    }
     setError('');
     setFieldErrors({ startDate: '', endDate: '' });
     let cancelled = false;
@@ -62,7 +68,7 @@ export default function BookingForm() {
     }
     check();
     return () => { cancelled = true; };
-  }, [startDate, endDate, van]);
+  }, [startDate, endDate, van, isAuthenticated]);
 
   function validateDates() {
     const errors = { startDate: '', endDate: '' };
@@ -201,7 +207,7 @@ export default function BookingForm() {
   if (!van && error) return <div style={s.center}><p style={{ color: '#b91c1c' }}>{error}</p><Link to="/vans" style={s.backLink}>Back to vans</Link></div>;
   if (!van) return null;
 
-  const canSubmit = startDate && endDate && available === true && !submitting;
+  const canSubmit = isAuthenticated && startDate && endDate && available === true && !submitting;
 
   return (
     <div style={s.container}>
@@ -249,10 +255,15 @@ export default function BookingForm() {
             </div>
           </div>
 
-          {availabilityError && startDate && endDate && (
+          {!isAuthenticated && startDate && endDate && (
+            <div style={{ ...s.availBadge, background: '#fef3c7', color: '#92400e', marginBottom: '1rem' }}>
+              Please <Link to="/login" style={{ color: '#2563eb', fontWeight: 600 }}>log in</Link> to check availability and book this van
+            </div>
+          )}
+          {availabilityError && startDate && endDate && isAuthenticated && (
             <div style={{ ...s.errorBox, marginBottom: '0.75rem' }}>Could not check availability. Please try again.</div>
           )}
-          {startDate && endDate && available !== null && !availabilityError && (
+          {startDate && endDate && available !== null && !availabilityError && isAuthenticated && (
             <span style={{ ...s.availBadge, ...(available ? s.availYes : s.availNo) }}>
               {available ? 'Available for selected dates' : 'Not available — choose different dates'}
             </span>
@@ -266,14 +277,14 @@ export default function BookingForm() {
             </div>
           )}
 
-          <button type="submit" style={{ ...s.submitBtn, ...(!canSubmit ? s.disabledBtn : {}) }} disabled={!canSubmit}>
-            {submitting ? 'Booking...' : 'Confirm Booking'}
-          </button>
-
-          {!isAuthenticated && (
-            <p style={{ textAlign: 'center', marginTop: '0.75rem', color: '#666', fontSize: '0.85rem' }}>
-              You need to <Link to="/login" style={{ color: '#2563eb' }}>log in</Link> to book a van.
-            </p>
+          {isAuthenticated ? (
+            <button type="submit" style={{ ...s.submitBtn, ...(!canSubmit ? s.disabledBtn : {}) }} disabled={!canSubmit}>
+              {submitting ? 'Booking...' : 'Confirm Booking'}
+            </button>
+          ) : (
+            <Link to="/login" style={{ ...s.submitBtn, display: 'block', textAlign: 'center', textDecoration: 'none' }}>
+              Log in to Book
+            </Link>
           )}
         </form>
       </div>

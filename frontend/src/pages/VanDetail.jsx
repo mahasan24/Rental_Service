@@ -170,7 +170,8 @@ export default function VanDetail() {
         <div>
           <div style={s.imageContainer}>
             <img
-              src={van.image_url || 'https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=800'}
+              src={van.image_url || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=500&fit=crop'}
+              onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=500&fit=crop'; }}
               alt={van.name}
               style={s.image}
             />

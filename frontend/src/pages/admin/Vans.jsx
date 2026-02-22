@@ -14,7 +14,7 @@ const COLORS = {
   border: '#e2e8f0',
 };
 
-const DEFAULT_VAN_IMAGE = 'https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=400';
+const DEFAULT_VAN_IMAGE = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=300&fit=crop';
 
 export default function AdminVans() {
   const { isAuthenticated } = useAuth();

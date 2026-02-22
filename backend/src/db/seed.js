@@ -8,7 +8,7 @@ const vans = [
     specs_json: JSON.stringify({ engine: '3.5L V6', transmission: 'Automatic', fuel: 'Petrol', ac: true }),
     description: 'Spacious 12-seater passenger van, perfect for group trips and family outings.',
     price_per_day: 89.99,
-    image_url: 'https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=600',
+    image_url: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&h=400&fit=crop',
   },
   {
     type: 'Cargo',
@@ -17,7 +17,7 @@ const vans = [
     specs_json: JSON.stringify({ engine: '2.0L Turbo Diesel', transmission: 'Automatic', fuel: 'Diesel', payload_kg: 1500 }),
     description: 'Heavy-duty cargo van with ample storage. Ideal for moving and deliveries.',
     price_per_day: 74.99,
-    image_url: 'https://images.unsplash.com/photo-1586191582117-65e77090e700?w=600',
+    image_url: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=600&h=400&fit=crop',
   },
   {
     type: 'Camper',
@@ -26,7 +26,7 @@ const vans = [
     specs_json: JSON.stringify({ engine: '2.0L TDI', transmission: 'Manual', fuel: 'Diesel', beds: 2, kitchenette: true }),
     description: 'Classic camper van with a pop-up roof, built-in kitchenette, and sleeping for four.',
     price_per_day: 109.99,
-    image_url: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=600',
+    image_url: 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=600&h=400&fit=crop',
   },
   {
     type: 'Passenger',
@@ -35,7 +35,7 @@ const vans = [
     specs_json: JSON.stringify({ engine: '2.8L Diesel', transmission: 'Automatic', fuel: 'Diesel', ac: true }),
     description: 'High-capacity commuter van with comfortable seating for up to 15 passengers.',
     price_per_day: 99.99,
-    image_url: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600',
+    image_url: 'https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?w=600&h=400&fit=crop',
   },
   {
     type: 'Cargo',
@@ -44,7 +44,7 @@ const vans = [
     specs_json: JSON.stringify({ engine: '3.6L V6', transmission: 'Automatic', fuel: 'Petrol', payload_kg: 1800 }),
     description: 'Full-size cargo van with the largest cargo area in its class.',
     price_per_day: 79.99,
-    image_url: 'https://images.unsplash.com/photo-1622185135505-2d795003994a?w=600',
+    image_url: 'https://images.unsplash.com/photo-1532581140115-3e355d1ed1de?w=600&h=400&fit=crop',
   },
   {
     type: 'Camper',
@@ -53,7 +53,7 @@ const vans = [
     specs_json: JSON.stringify({ engine: '3.0L Turbo Diesel', transmission: 'Automatic', fuel: 'Diesel', beds: 1, kitchenette: true, shower: true }),
     description: 'Compact yet luxurious camper van with a wet bath, kitchen, and sleeping area.',
     price_per_day: 129.99,
-    image_url: 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=600',
+    image_url: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=600&h=400&fit=crop',
   },
   {
     type: 'Passenger',
@@ -62,7 +62,7 @@ const vans = [
     specs_json: JSON.stringify({ engine: '2.5L Diesel', transmission: 'Manual', fuel: 'Diesel', ac: true }),
     description: 'Reliable mid-size passenger van suitable for shuttle services and tours.',
     price_per_day: 69.99,
-    image_url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600',
+    image_url: 'https://images.unsplash.com/photo-1609520778163-a16fb3862581?w=600&h=400&fit=crop',
   },
   {
     type: 'Cargo',
@@ -71,7 +71,7 @@ const vans = [
     specs_json: JSON.stringify({ engine: 'Electric Motor', transmission: 'Automatic', fuel: 'Electric', payload_kg: 1600, range_km: 200 }),
     description: 'Zero-emission electric cargo van for eco-friendly urban deliveries.',
     price_per_day: 84.99,
-    image_url: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600',
+    image_url: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=600&h=400&fit=crop',
   },
 ];
 
