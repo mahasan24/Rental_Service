@@ -3,28 +3,27 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import authRoutes from './routes/auth.js';
-import faqRoutes from './routes/faq.js';
-import describeRoutes from './routes/descriptionGen.js';
 import vanRoutes from './routes/vans.js';
 import bookingRoutes from './routes/bookings.js';
+import recommendationsRoutes from './routes/recommendations.js';
+import aiRoutes from './routes/ai.js';
+import adminRoutes from './routes/admin.js';
 
 dotenv.config();
 
 const app = express();
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
-  .split(',')
-  .map(o => o.trim());
-
-app.use(cors({
+const allowedOrigins = FRONTEND_URL.split(',').map(url => url.trim());
+app.use(cors({ 
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true);
     }
-  },
-  credentials: true,
+  }, 
+  credentials: true 
 }));
 app.use(express.json());
 
@@ -33,10 +32,11 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/faq', faqRoutes);
-app.use('/api/describe', describeRoutes);
 app.use('/api/vans', vanRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/recommendations', recommendationsRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);
