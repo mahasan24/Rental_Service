@@ -19,10 +19,8 @@ function isValidDateRange(startDate, endDate) {
   return end >= start;
 }
 
-// All booking routes require authentication
 router.use(authMiddleware);
 
-// Check van availability for a date range
 router.get('/availability', async (req, res, next) => {
   try {
     const { van_id, start_date, end_date } = req.query;
@@ -47,7 +45,6 @@ router.get('/availability', async (req, res, next) => {
   }
 });
 
-// Create a new booking
 router.post('/', async (req, res, next) => {
   try {
     const { van_id, start_date, end_date } = req.body;
@@ -108,7 +105,6 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// List current user's bookings
 router.get('/', async (req, res, next) => {
   try {
     const result = await pool.query(
@@ -126,7 +122,6 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// Cancel a booking
 router.patch('/:id/cancel', async (req, res, next) => {
   try {
     const id = parseInt(req.params.id, 10);
