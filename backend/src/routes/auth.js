@@ -14,12 +14,12 @@ router.post('/register', async (req, res, next) => {
     }
     const password_hash = await bcrypt.hash(password, 10);
     const result = await pool.query(
-      'INSERT INTO users (email, password_hash, name) VALUES ($1, $2, $3) RETURNING id, email, name, created_at',
-      [email.trim().toLowerCase(), password_hash, name || null]
+      'INSERT INTO users (email, password_hash, name, role) VALUES ($1, $2, $3, $4) RETURNING id, email, name, role, created_at',
+      [email.trim().toLowerCase(), password_hash, name || null, 'user']
     );
     const user = result.rows[0];
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
-    res.status(201).json({ user: { id: user.id, email: user.email, name: user.name }, token });
+    res.status(201).json({ user: { id: user.id, email: user.email, name: user.name, role: user.role }, token });
   } catch (err) {
     if (err.code === '23505') {
       return res.status(409).json({ error: 'Email already registered' });
@@ -35,7 +35,7 @@ router.post('/login', async (req, res, next) => {
       return res.status(400).json({ error: 'Email and password required' });
     }
     const result = await pool.query(
-      'SELECT id, email, name, password_hash FROM users WHERE email = $1',
+      'SELECT id, email, name, password_hash, role FROM users WHERE email = $1',
       [email.trim().toLowerCase()]
     );
     const user = result.rows[0];
@@ -43,7 +43,7 @@ router.post('/login', async (req, res, next) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ user: { id: user.id, email: user.email, name: user.name }, token });
+    res.json({ user: { id: user.id, email: user.email, name: user.name, role: user.role || 'user' }, token });
   } catch (err) {
     next(err);
   }

@@ -3,6 +3,19 @@ import { Link } from 'react-router-dom';
 import client from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
+const DEFAULT_VAN_IMAGE = 'https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=400';
+
+const COLORS = {
+  primary: '#0f172a',
+  accent: '#3b82f6',
+  light: '#f8fafc',
+  white: '#ffffff',
+  muted: '#64748b',
+  border: '#e2e8f0',
+  success: '#10b981',
+  error: '#dc2626',
+};
+
 export default function MyBookings() {
   const { isAuthenticated } = useAuth();
   const [bookings, setBookings] = useState([]);
@@ -52,47 +65,60 @@ export default function MyBookings() {
   }
 
   const s = {
-    container: { maxWidth: 800, margin: '0 auto', padding: '2rem 1rem' },
-    heading: { fontSize: '1.8rem', fontWeight: 700, marginBottom: '0.5rem' },
-    subtitle: { color: '#666', marginBottom: '1.5rem' },
+    container: { maxWidth: 900, margin: '0 auto', padding: '2rem 1rem' },
+    header: { marginBottom: '2rem' },
+    heading: { fontSize: '1.8rem', fontWeight: 700, color: COLORS.primary, marginBottom: '0.5rem' },
+    subtitle: { color: COLORS.muted, fontSize: '1rem' },
     loginPrompt: {
-      padding: '2rem', textAlign: 'center', background: '#f8f9fa',
-      borderRadius: 12, color: '#555',
+      padding: '3rem', textAlign: 'center', background: COLORS.white,
+      borderRadius: 16, color: COLORS.muted, boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
     },
-    loginLink: { color: '#2563eb', fontWeight: 600 },
+    loginLink: { color: COLORS.accent, fontWeight: 600 },
     errorBox: {
-      padding: '1rem', background: '#fee2e2', color: '#b91c1c',
-      borderRadius: 8, marginBottom: '1rem',
+      padding: '1rem 1.5rem', background: '#fef2f2', color: COLORS.error,
+      borderRadius: 12, marginBottom: '1.5rem', fontWeight: 500,
     },
-    list: { display: 'flex', flexDirection: 'column', gap: '1rem' },
+    list: { display: 'flex', flexDirection: 'column', gap: '1.25rem' },
     card: {
-      display: 'flex', gap: '1rem', padding: '1rem', background: '#fff',
-      border: '1px solid #e5e7eb', borderRadius: 12, alignItems: 'flex-start',
-      flexWrap: 'wrap',
+      display: 'flex', gap: '1.25rem', padding: '1.25rem', background: COLORS.white,
+      borderRadius: 16, alignItems: 'flex-start', flexWrap: 'wrap',
+      boxShadow: '0 2px 12px rgba(0,0,0,0.04)', transition: 'box-shadow 0.2s',
     },
-    img: { width: 120, height: 90, objectFit: 'cover', borderRadius: 8 },
-    body: { flex: 1, minWidth: 200 },
-    vanName: { fontWeight: 700, fontSize: '1.1rem', margin: '0 0 0.25rem' },
-    vanType: { color: '#666', fontSize: '0.85rem', marginBottom: '0.5rem' },
-    dates: { fontSize: '0.9rem', color: '#444', marginBottom: '0.25rem' },
-    total: { fontWeight: 600, color: '#2563eb', fontSize: '0.95rem' },
+    img: {
+      width: 140, height: 100, objectFit: 'cover', borderRadius: 12,
+      background: COLORS.light,
+    },
+    body: { flex: 1, minWidth: 220 },
+    vanName: { fontWeight: 700, fontSize: '1.15rem', color: COLORS.primary, margin: '0 0 0.25rem' },
+    vanType: {
+      display: 'inline-block', padding: '0.2rem 0.6rem', borderRadius: 12,
+      fontSize: '0.75rem', fontWeight: 600, marginBottom: '0.75rem',
+      background: COLORS.light, color: COLORS.muted,
+    },
+    dates: { fontSize: '0.9rem', color: COLORS.primary, marginBottom: '0.5rem' },
+    datesLabel: { color: COLORS.muted },
+    total: { fontWeight: 600, color: COLORS.accent, fontSize: '1rem' },
     statusBadge: {
-      display: 'inline-block', padding: '0.2rem 0.6rem', borderRadius: 20,
-      fontSize: '0.75rem', fontWeight: 600, marginTop: '0.5rem',
+      display: 'inline-block', padding: '0.25rem 0.75rem', borderRadius: 20,
+      fontSize: '0.75rem', fontWeight: 600, marginTop: '0.75rem',
     },
     statusConfirmed: { background: '#d1fae5', color: '#065f46' },
     statusCancelled: { background: '#f3f4f6', color: '#6b7280' },
     actions: { display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' },
-    link: { color: '#2563eb', fontSize: '0.9rem', textDecoration: 'none' },
+    link: { color: COLORS.accent, fontSize: '0.9rem', textDecoration: 'none', fontWeight: 500 },
     cancelBtn: {
-      padding: '0.4rem 0.8rem', fontSize: '0.85rem', background: '#fee2e2',
-      color: '#b91c1c', border: 'none', borderRadius: 6, cursor: 'pointer',
-      fontWeight: 500,
+      padding: '0.5rem 1rem', fontSize: '0.85rem', background: '#fef2f2',
+      color: COLORS.error, border: 'none', borderRadius: 8, cursor: 'pointer',
+      fontWeight: 500, transition: 'background 0.2s',
     },
-    empty: { textAlign: 'center', padding: '3rem', color: '#888' },
+    empty: {
+      textAlign: 'center', padding: '4rem 2rem', background: COLORS.white,
+      borderRadius: 16, boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
+    },
+    emptyIcon: { fontSize: '3rem', marginBottom: '1rem' },
     retryBtn: {
-      marginTop: '0.5rem', padding: '0.5rem 1rem', background: '#2563eb',
-      color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer',
+      marginTop: '1rem', padding: '0.6rem 1.25rem', background: COLORS.accent,
+      color: COLORS.white, border: 'none', borderRadius: 8, cursor: 'pointer',
       fontSize: '0.9rem', fontWeight: 500,
     },
   };
@@ -100,24 +126,37 @@ export default function MyBookings() {
   if (!isAuthenticated) {
     return (
       <div style={s.container}>
-        <h1 style={s.heading}>My Bookings</h1>
-        <p style={s.subtitle}>View and manage your van reservations.</p>
+        <div style={s.header}>
+          <h1 style={s.heading}>My Bookings</h1>
+          <p style={s.subtitle}>View and manage your van reservations.</p>
+        </div>
         <div style={s.loginPrompt}>
-          <p>Please <Link to="/login" style={s.loginLink}>log in</Link> to view your bookings.</p>
+          <div style={s.emptyIcon}>🔐</div>
+          <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Please log in to view your bookings</p>
+          <Link to="/login" style={s.loginLink}>Sign in to your account</Link>
         </div>
       </div>
     );
   }
 
   if (loading && bookings.length === 0) {
-    return <div style={{ ...s.container, textAlign: 'center', padding: '3rem' }}>Loading your bookings...</div>;
+    return (
+      <div style={s.container}>
+        <div style={s.empty}>
+          <div style={s.emptyIcon}>⏳</div>
+          <p>Loading your bookings...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error && bookings.length === 0) {
     return (
       <div style={s.container}>
-        <h1 style={s.heading}>My Bookings</h1>
-        <p style={s.subtitle}>View and manage your van reservations.</p>
+        <div style={s.header}>
+          <h1 style={s.heading}>My Bookings</h1>
+          <p style={s.subtitle}>View and manage your van reservations.</p>
+        </div>
         <div style={s.errorBox}>{error}</div>
         <button type="button" style={s.retryBtn} onClick={() => fetchBookings()}>Try again</button>
       </div>
@@ -126,31 +165,37 @@ export default function MyBookings() {
 
   return (
     <div style={s.container}>
-      <h1 style={s.heading}>My Bookings</h1>
-      <p style={s.subtitle}>View and manage your van reservations.</p>
+      <div style={s.header}>
+        <h1 style={s.heading}>My Bookings</h1>
+        <p style={s.subtitle}>View and manage your van reservations.</p>
+      </div>
 
       {error && <div style={s.errorBox}>{error}</div>}
 
       {bookings.length === 0 ? (
         <div style={s.empty}>
-          <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>You have no bookings yet.</p>
-          <Link to="/vans" style={s.loginLink}>Browse vans and book one</Link>
+          <div style={s.emptyIcon}>📋</div>
+          <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: COLORS.primary }}>You have no bookings yet</p>
+          <p style={{ color: COLORS.muted, marginBottom: '1rem' }}>Start by browsing our van collection</p>
+          <Link to="/vans" style={{ ...s.retryBtn, textDecoration: 'none', display: 'inline-block' }}>Browse Vans</Link>
         </div>
       ) : (
         <div style={s.list}>
           {bookings.map(b => (
             <div key={b.id} style={s.card}>
               <img
-                src={b.image_url || 'https://via.placeholder.com/120x90?text=Van'}
+                src={b.image_url || DEFAULT_VAN_IMAGE}
                 alt={b.van_name}
                 style={s.img}
+                onError={(e) => { e.target.src = DEFAULT_VAN_IMAGE; }}
               />
               <div style={s.body}>
                 <div style={s.vanName}>{b.van_name}</div>
-                <div style={s.vanType}>{b.van_type}</div>
+                <span style={s.vanType}>{b.van_type}</span>
                 <div style={s.dates}>
+                  <span style={s.datesLabel}>Dates: </span>
                   {new Date(b.start_date).toLocaleDateString()} – {new Date(b.end_date).toLocaleDateString()}
-                  {' · '}{daysBetween(b.start_date, b.end_date)} {daysBetween(b.start_date, b.end_date) === 1 ? 'day' : 'days'}
+                  {' '}({daysBetween(b.start_date, b.end_date)} {daysBetween(b.start_date, b.end_date) === 1 ? 'day' : 'days'})
                 </div>
                 <div style={s.total}>
                   Total: ${(daysBetween(b.start_date, b.end_date) * Number(b.price_per_day)).toFixed(2)}
@@ -159,18 +204,18 @@ export default function MyBookings() {
                   ...s.statusBadge,
                   ...(b.status === 'confirmed' ? s.statusConfirmed : s.statusCancelled),
                 }}>
-                  {b.status}
+                  {b.status === 'confirmed' ? '✓ Confirmed' : 'Cancelled'}
                 </span>
               </div>
               <div style={s.actions}>
-                <Link to={`/vans/${b.van_id}`} style={s.link}>View van</Link>
+                <Link to={`/vans/${b.van_id}`} style={s.link}>View van →</Link>
                 {b.status === 'confirmed' && (
                   <button
                     style={s.cancelBtn}
                     onClick={() => handleCancel(b.id)}
                     disabled={cancellingId === b.id}
                   >
-                    {cancellingId === b.id ? 'Cancelling...' : 'Cancel'}
+                    {cancellingId === b.id ? 'Cancelling...' : 'Cancel Booking'}
                   </button>
                 )}
               </div>
